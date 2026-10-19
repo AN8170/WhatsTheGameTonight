@@ -1,5 +1,5 @@
-Website Link : https://an8170.github.io/WhatsTheGameTonight/
-# 🏈 WhatsTheGameTonight?
+# Website Link : https://an8170.github.io/WhatsTheGameTonight/
+## 🏈 WhatsTheGameTonight?
 
 Your daily guide to college football.
 
@@ -7,7 +7,7 @@ WhatsTheGameTonight? is a free, mobile-friendly college football schedule websit
 
 Whether you're planning your Saturday around college football or looking for a matchup during the week, WhatsTheGameTonight? helps you stay on top of the action.
 
-🏟️ Features
+## 🏟️ Features
 
 Today's Games: Automatically displays college football games scheduled for the current day.
 
@@ -27,7 +27,7 @@ Mobile-Friendly Design: Responsive layout that works on phones, tablets, and des
 
 Automatic Data Retrieval: Uses ESPN's publicly available college football data feed.
 
-🚀 How to Use
+## 🚀 How to Use
 
 Open the WhatsTheGameTonight? website.
 
@@ -41,7 +41,7 @@ Check kickoff times and scores when available.
 
 No account or subscription required!
 
-🛠️ Built With
+## 🛠️ Built With
 
 HTML5 – Website structure
 
@@ -55,7 +55,7 @@ ESPN Public Data Feed – College football schedules and game information
 
 GitHub Pages – Free website hosting
 
-📊 Data Source
+## 📊 Data Source
 
 College football schedule information is retrieved from ESPN's publicly accessible data feed.
 
