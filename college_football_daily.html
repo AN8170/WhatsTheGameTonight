@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1515">
+  <meta name="description" content="Today's college football schedule, kickoff times, and live scores.">
+  <title>Saturday Lights | College Football Schedule</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <link rel="preconnect" href="https://site.api.espn.com">
+  <style>
+    :root { --pico-font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --pico-primary:#daff6d; --pico-primary-hover:#e6ff9d; --pico-primary-focus:rgba(218,255,109,.25); --pico-background-color:#0b1515; --pico-color:#ecf2ed; --pico-muted-color:#abb9af; --surface:#142120; --line:#30433d; --acid:#daff6d; }
+    *,*::before,*::after {box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0; background:#0b1515; color:#ecf2ed}
+    a{color:inherit}
+    nav.container-fluid{max-width:1500px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:1.15rem clamp(1rem,5vw,4rem); border-bottom:1px solid #ffffff1b}
+    nav ul{padding:0;margin:0;display:flex;gap:1.6rem;align-items:center;list-style:none}
+    nav li{padding:0}
+    nav a{text-decoration:none;font-size:.82rem;font-weight:650}
+    .brand{display:flex;align-items:center;gap:.65rem;letter-spacing:.05em;font-size:1rem}
+    .brand-icon{width:32px;height:32px;border:2px solid var(--acid);border-radius:8px;display:grid;place-items:center;color:var(--acid);font-size:19px;font-weight:900;transform:rotate(-8deg)}
+    .nav-muted{color:#aec0b4}
+    .nav-link{color:var(--acid)}
+    .hero{position:relative;overflow:hidden; background:linear-gradient(90deg,rgba(8,20,19,.98) 0%,rgba(8,20,19,.91) 47%,rgba(8,20,19,.56) 100%),url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1800&q=82') center 50%/cover; border-bottom:1px solid #ffffff1a}
+    .hero-inner{max-width:1200px; margin:auto;padding:clamp(3.2rem,8vw,7rem) 1.25rem clamp(3rem,6vw,5.2rem)}
+    .eyebrow{color:var(--acid);font-size:.73rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;display:flex;align-items:center;gap:.7rem}
+    .eyebrow:before{content:"";width:27px;height:2px;background:var(--acid)}
+    h1{font-size:clamp(3.3rem,9vw,7.8rem);letter-spacing:-.075em;line-height:.92;margin:.9rem 0 1.2rem;font-weight:900;max-width:850px}
+    h1 em{font-style:normal;color:var(--acid)}
+    .lead{max-width:560px;color:#c8d5ca;font-size:clamp(1rem,2vw,1.2rem);line-height:1.65}
+    .hero-bottom{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:2.2rem}
+    .live-dot{width:8px;height:8px;background:#a8f87e;border-radius:50%;box-shadow:0 0 14px #a8f87e;display:inline-block;margin-right:.45rem}
+    .pill{border:1px solid #a8beac50;border-radius:100px;padding:.42rem .85rem;color:#d7e1d8;font-size:.73rem;letter-spacing:.05em;font-weight:700}
+    main.container{max-width:1200px;padding:2.4rem 1.25rem 5rem}
+    .section-top{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin-bottom:1.4rem}
+    .section-kicker{font-size:.7rem;font-weight:850;letter-spacing:.18em;color:var(--acid);text-transform:uppercase}
+    h2{font-size:clamp(1.7rem,3.8vw,2.7rem);font-weight:850;letter-spacing:-.045em;margin:.38rem 0 .4rem}
+    .muted{color:#acbaaf}
+    .section-top p{margin:0}
+    .timezone{font-size:.77rem;color:#afc1b3}
+    .controls{display:grid;grid-template-columns:1.1fr 1.15fr 1.1fr auto;gap:.8rem;align-items:end;background:#172523;border:1px solid #32453e;border-radius:14px;padding:1.2rem}
+    .field label{font-size:.67rem;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:#aebeaf;margin-bottom:.35rem}
+    .field input,.field select{height:48px;margin:0;background:#0d1918;border:1px solid #385047;color:#f4faf4;border-radius:8px;font-size:.85rem}
+    .controls button{height:48px;margin:0;background:var(--acid);border:0;border-radius:8px;color:#14201c;font-weight:850;padding:0 1.25rem}
+    .quick-dates{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:1.1rem 0 2rem}
+    .quick-dates button{width:auto;margin:0;padding:.4rem .85rem;border-radius:100px;font-size:.76rem;font-weight:700;background:transparent;color:#bbcbbd;border:1px solid #3b5146}
+    .quick-dates button.active{background:var(--acid);color:#102017;border-color:var(--acid)}
+    .results-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 .9rem;flex-wrap:wrap}
+    .results-head h3{margin:0;font-size:1.03rem;letter-spacing:-.02em}
+    .results-head small{color:#b2c2b6}
+    .game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.95rem}
+    .game{background:#152320;border:1px solid #344940;border-radius:13px;padding:1.15rem;min-width:0;transition:border-color .2s,transform .2s}
+    .game:hover{border-color:#809b64;transform:translateY(-2px)}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:1.05rem}
+    .status{font-size:.66rem;font-weight:850;letter-spacing:.1em;color:#d8e9d9;text-transform:uppercase}
+    .status.live{color:#ccff74}
+    .status.final{color:#aebfb0}
+    .conference{font-size:.66rem;color:#9bafa0;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .team{display:flex;align-items:center;gap:.85rem;margin:.8rem 0;min-width:0}
+    .team img{width:43px;height:43px;object-fit:contain;flex-shrink:0}
+    .team .fallback-logo{width:43px;height:43px;display:grid;place-items:center;border-radius:50%;background:#31443c;color:#d6edcc;font-size:.8rem;font-weight:800;flex-shrink:0}
+    .team-name{font-size:.96rem;font-weight:770;line-height:1.25;overflow-wrap:anywhere}
+    .team-record{display:block;color:#a0b3a5;font-size:.72rem;font-weight:500;margin-top:.12rem}
+    .score{font-weight:850;font-size:1.45rem;margin-left:auto;font-variant-numeric:tabular-nums}
+    .card-foot{border-top:1px solid #33483e;margin-top:1.1rem;padding-top:.85rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;color:#b0c2b2;font-size:.73rem}
+    .card-foot a{color:var(--acid);font-weight:750;text-decoration:none;white-space:nowrap}
+    .empty{border:1px dashed #4b6456;border-radius:14px;text-align:center;padding:3.4rem 1.25rem;background:#14211e}
+    .empty-icon{font-size:2.2rem;display:block;margin-bottom:.9rem}
+    .empty h3{margin-bottom:.5rem}
+    .empty p{max-width:480px;margin:0 auto 1.2rem;color:#b4c2b8}
+    .empty button{width:auto;background:var(--acid);color:#101a13;border:0;font-weight:750}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin:2.2rem 0 0}
+    .stat{border-top:1px solid #465a49;padding-top:1rem}
+    .stat strong{display:block;font-size:2rem;color:var(--acid);line-height:1.2}
+    .stat span{font-size:.75rem;color:#adc0b2}
+    .subscribe{background:#1a2a24;border-top:1px solid #37493b;border-bottom:1px solid #37493b}
+    .subscribe .inner{max-width:1200px;margin:auto;padding:2.7rem 1.25rem;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:2rem}
+    .subscribe h2{font-size:1.8rem}
+    .subscribe p{color:#b5c5b7;margin:0}
+    .subscribe form{display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem}
+    .subscribe input{margin:0;background:#0b1914;border:1px solid #4a6050;height:45px;font-size:.8rem}
+    .subscribe button{margin:0;background:var(--acid);color:#102017;border:0;font-weight:850;padding:0 1rem;height:45px;font-size:.8rem}
+    .form-note{grid-column:1/-1;font-size:.7rem;color:#b6c5b7;margin:0}
+    footer.container{max-width:1200px;padding:1.8rem 1.25rem 2.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+    footer small{color:#a5b6a9;font-size:.72rem}
+    footer a{color:#d7e9d3;text-decoration:none}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:850px){.controls{grid-template-columns:1fr 1fr}.controls button{grid-column:1/-1}.subscribe .inner{grid-template-columns:1fr}.hero{background-position:center}}
+    @media(max-width:600px){nav.container-fluid{padding:1rem}.nav-muted{display:none}.hero-inner{padding:4rem 1.1rem}.game-grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.controls button{grid-column:auto}.subscribe form{grid-template-columns:1fr}.stats{gap:1rem}h1{font-size:3.55rem}main.container{padding-top:2rem}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <nav class="container-fluid" aria-label="Main navigation">
+    <ul><li><a class="brand" href="#" aria-label="Saturday Lights home"><span class="brand-icon" aria-hidden="true">✦</span><strong>SATURDAY LIGHTS</strong></a></li></ul>
+    <ul><li><a class="nav-muted" href="#schedule">Today's Games</a></li><li><a class="nav-link" href="#schedule">View Schedule ↗</a></li></ul>
+  </nav>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Your college football headquarters</div>
+      <h1>EVERY GAME.<br><em>EVERY DAY.</em></h1>
+      <p class="lead">From the first kickoff to the final whistle. Your daily lineup of college football matchups, game times, and live scores—all in one place.</p>
+      <div class="hero-bottom"><span class="pill"><span class="live-dot"></span> UPDATED FROM ESPN</span><span class="pill">NCAA DIVISION I · FBS</span></div>
+    </div>
+  </header>
+
+  <main class="container" id="schedule">
+    <div class="section-top">
+      <div><span class="section-kicker">The daily lineup</span><h2 id="scheduleTitle">Today's Matchups</h2><p class="muted" id="dateHeading">Finding games for your date…</p></div>
+      <span class="timezone" id="timezoneLabel">Times shown in your local timezone</span>
+    </div>
+    <div class="controls" role="search" aria-label="Filter games">
+      <div class="field"><label for="gameDate">Game date</label><input id="gameDate" type="date" required></div>
+      <div class="field"><label for="conference">Conference</label><select id="conference"><option value="all">All conferences</option><option>SEC</option><option>Big Ten</option><option>Big 12</option><option>ACC</option><option>American</option><option>Mountain West</option><option>Sun Belt</option><option>Conference USA</option><option>MAC</option><option>Pac-12</option><option>Independents</option></select></div>
+      <div class="field"><label for="teamSearch">Search teams</label><input id="teamSearch" type="search" placeholder="e.g. Texas A&amp;M" autocomplete="off"></div>
+      <button id="loadGames" type="button">Find Games ↗</button>
+    </div>
+    <div class="quick-dates" aria-label="Quick date filters"><button data-offset="0" class="active" type="button">Today</button><button data-offset="1" type="button">Tomorrow</button><button id="saturdayButton" type="button">Next Saturday</button><button id="refreshButton" type="button" title="Refresh current results">↻ Refresh</button></div>
+    <div class="results-head"><h3 id="gamesCount">Loading schedule…</h3><small id="updatedLabel" aria-live="polite">Connecting to scoreboard</small></div>
+    <div id="games" class="game-grid" aria-live="polite" aria-busy="true"></div>
+    <div class="stats" aria-label="Schedule summary"><div class="stat"><strong id="statGames">—</strong><span>Games found</span></div><div class="stat"><strong id="statLive">—</strong><span>Live now</span></div><div class="stat"><strong id="statFinished">—</strong><span>Final scores</span></div></div>
+  </main>
+
+  <section class="subscribe" aria-label="Subscribe">
+    <div class="inner">
+      <div><span class="section-kicker">Never miss kickoff</span><h2>Make every game day count.</h2><p>Bookmark this page and come back anytime for the daily schedule.</p></div>
+      <form id="subscribeForm">
+        <input type="text" id="firstname" name="firstname" placeholder="First name" aria-label="First name" required>
+        <input type="email" id="email" name="email" placeholder="Email address" aria-label="Email address" required>
+        <button type="submit">Subscribe</button>
+        <p class="form-note" id="subscribeNote">Demo form only — connect an email service to activate subscriptions.</p>
+      </form>
+    </div>
+  </section>
+  <footer class="container"><small>© <span id="year"></span> Saturday Lights · Unofficial college football schedule.</small><small><a href="#schedule">Schedule</a> · <a href="https://www.espn.com/college-football/scoreboard" target="_blank" rel="noopener noreferrer">ESPN scoreboard ↗</a></small></footer>
+  <script>
+    "use strict";
+    const $ = id => document.getElementById(id);
+    const DATE_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Chicago";
+    const localISO = d => [d.getFullYear(), String(d.getMonth()+1).padStart(2,"0"), String(d.getDate()).padStart(2,"0")].join("-");
+    const isoToDate = iso => { const [y,m,d]=iso.split("-").map(Number); return new Date(y,m-1,d,12); };
+    const shiftDate = (iso,n) => {const d=isoToDate(iso); d.setDate(d.getDate()+n);return localISO(d)};
+    const dateFmt = new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+    const timeFmt = new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",timeZone:DATE_TZ,timeZoneName:"short"});
+    const dayKey = raw => {const p=new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:DATE_TZ}).formatToParts(new Date(raw));const o=Object.fromEntries(p.map(x=>[x.type,x.value]));return `${o.year}-${o.month}-${o.day}`};
+    let loaded=[], fetchController=null, lastLoaded="", fetchedAt="";
+    const safe = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    function conferenceName(team){const name=team?.team?.conference?.name||team?.team?.conference?.shortName||team?.conference?.name||"";return name}
+    function matchConference(event, selected){
+      if(selected==="all") return true;
+      const teams=event.competitions?.[0]?.competitors||[];
+      const aliases={"American":["american","aac"],"MAC":["mid-american","mac"],"Independents":["independent"],"Pac-12":["pac-12","pac 12"],"Conference USA":["conference usa","c-usa","cusa"]};
+      const opts=aliases[selected]||[selected.toLowerCase()];
+      return teams.some(t=>{const names=[conferenceName(t), t.team?.conference?.abbreviation, t.team?.conference?.shortName].filter(Boolean).join(" ").toLowerCase(); return opts.some(o=>names.includes(o))});
+    }
+    function getMode(e){const state=e.status?.type;return state?.state==="in"?"live":state?.state==="post"?"final":"scheduled"}
+    function card(event){
+      const comp=event.competitions?.[0]||{}, teams=comp.competitors||[], away=teams.find(x=>x.homeAway==="away")||teams[0],home=teams.find(x=>x.homeAway==="home")||teams[1];
+      if(!away||!home)return "";
+      const mode=getMode(event),status=mode==="scheduled"?"UPCOMING":mode==="final"?"FINAL":safe(event.status?.type?.shortDetail||"LIVE");
+      const logo=t=>{const src=t.team?.logo||t.team?.logos?.[0]?.href;if(!src)return `<span class="fallback-logo" aria-hidden="true">${safe((t.team?.abbreviation||"CF").slice(0,2))}</span>`;return `<img src="${safe(src)}" alt="" loading="lazy" onerror="this.style.display='none'">`};
+      const row=t=>`<div class="team">${logo(t)}<div class="team-name">${safe(t.team?.displayName||"Unknown team")}<span class="team-record">${safe(t.records?.[0]?.summary||t.team?.abbreviation||"")}</span></div>${mode!=="scheduled"?`<strong class="score">${safe(t.score??"-")}</strong>`:""}</div>`;
+      const info=mode==="scheduled"?timeFmt.format(new Date(event.date)):safe(event.status?.type?.detail||event.status?.type?.shortDetail||"");
+      const venue=comp.venue?.fullName||"Venue TBA";
+      const link=event.links?.find(x=>x.rel?.includes("summary"))?.href||`https://www.espn.com/college-football/game/_/gameId/${encodeURIComponent(event.id)}`;
+      const conf=conferenceName(home)||conferenceName(away)||"College football";
+      return `<article class="game"><div class="card-head"><span class="status ${mode}">${mode==="live"?"● ":""}${status}</span><span class="conference" title="${safe(conf)}">${safe(conf)}</span></div>${row(away)}${row(home)}<div class="card-foot"><span title="${safe(venue)}">${safe(info)}</span><a href="${safe(link)}" target="_blank" rel="noopener noreferrer">Game details ↗</a></div></article>`;
+    }
+    function render(){
+      const date=$("gameDate").value, conference=$("conference").value,q=$("teamSearch").value.trim().toLowerCase();
+      const filtered=loaded.filter(e=>matchConference(e,conference) && (!q||e.competitions?.[0]?.competitors?.some(t=>[t.team?.displayName,t.team?.shortDisplayName,t.team?.abbreviation,t.team?.location,t.team?.name].some(s=>String(s||"").toLowerCase().includes(q)))));
+      filtered.sort((a,b)=>new Date(a.date)-new Date(b.date));
+      $("scheduleTitle").textContent=date===localISO(new Date())?"Today's Matchups":"Game Day Matchups";
+      $("dateHeading").textContent=dateFmt.format(isoToDate(date));
+      $("gamesCount").textContent=`${filtered.length} ${filtered.length===1?"game":"games"} on the board`;
+      $("statGames").textContent=filtered.length;
+      $("statLive").textContent=filtered.filter(e=>getMode(e)==="live").length;
+      $("statFinished").textContent=filtered.filter(e=>getMode(e)==="final").length;
+      $("updatedLabel").textContent=fetchedAt?"Updated "+fetchedAt:"";
+      $("games").innerHTML=filtered.length?filtered.map(card).join(""):`<div class="empty" style="grid-column:1/-1"><span class="empty-icon">🏈</span><h3>No games on the board</h3><p>${loaded.length?"No matchups match your filters. Try a different team or conference.":"No FBS games are scheduled for this date. Most college football games take place on Saturdays."}</p><button type="button" id="showSaturday">See next Saturday's games ↗</button></div>`;
+      $("showSaturday")?.addEventListener("click",nextSaturday);
+      $("games").setAttribute("aria-busy","false");
+    }
+    function nextSaturday(){let d=isoToDate($("gameDate").value);let days=(6-d.getDay()+7)%7;if(days===0)days=7;d.setDate(d.getDate()+days);$("gameDate").value=localISO(d);setActive();load();}
+    function setActive(){document.querySelectorAll(".quick-dates [data-offset]").forEach(b=>{b.classList.toggle("active",shiftDate(localISO(new Date()),Number(b.dataset.offset))===$("gameDate").value)})}
+    async function load(){
+      const date=$("gameDate").value;
+      if(!date) return;
+      if(fetchController)fetchController.abort();
+      fetchController=new AbortController();
+      const signal=fetchController.signal;
+      $("games").setAttribute("aria-busy","true");
+      $("games").innerHTML=`<div class="empty" style="grid-column:1/-1"><span class="empty-icon">🏈</span><h3>Loading game day…</h3><p>Checking today's college football matchups.</p></div>`;
+      $("gamesCount").textContent="Loading schedule…";$("updatedLabel").textContent="Connecting to ESPN";
+      const dates=[shiftDate(date,-1),date,shiftDate(date,1)];
+      try{
+        const responses=await Promise.all(dates.map(async d=>{
+          const yyyyMMdd=d.replace(/-/g,"");
+          const url=`https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=500&dates=${yyyyMMdd}`;
+          const response=await fetch(url,{signal,cache:"no-store"});if(!response.ok)throw new Error("Sports feed unavailable");return response.json();
+        }));
+        if(signal.aborted)return;
+        const events=new Map();
+        for(const data of responses){for(const e of data.events||[]){if(dayKey(e.date)===date)events.set(e.id,e)}}
+        loaded=[...events.values()];lastLoaded=date;fetchedAt=new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit"}).format(new Date());
+        render();
+      }catch(err){
+        if(signal.aborted)return;
+        loaded=[];fetchedAt="";
+        $("gamesCount").textContent="Schedule unavailable";$("updatedLabel").textContent="Could not connect";
+        $("games").setAttribute("aria-busy","false");
+        $("games").innerHTML=`<div class="empty" style="grid-column:1/-1"><span class="empty-icon">📡</span><h3>Couldn't load the schedule</h3><p>Check your internet connection or try again. The live scoreboard service may be temporarily unavailable.</p><button type="button" id="retry">Retry ↻</button></div>`;
+        $("retry").addEventListener("click",load);
+        ["statGames","statLive","statFinished"].forEach(id=>$(id).textContent="—");
+      }
+    }
+    $("year").textContent=new Date().getFullYear();
+    $("timezoneLabel").textContent=`Kickoff times in your timezone (${DATE_TZ.replaceAll("_"," ")})`;
+    $("gameDate").value=localISO(new Date());
+    $("gameDate").addEventListener("change",()=>{setActive();load()});
+    $("loadGames").addEventListener("click",()=>lastLoaded===$("gameDate").value?render():load());
+    $("conference").addEventListener("change",render);
+    $("teamSearch").addEventListener("input",render);
+    document.querySelectorAll("[data-offset]").forEach(b=>b.addEventListener("click",()=>{$("gameDate").value=shiftDate(localISO(new Date()),Number(b.dataset.offset));setActive();load()}));
+    $("saturdayButton").addEventListener("click",nextSaturday);
+    $("refreshButton").addEventListener("click",load);
+    $("subscribeForm").addEventListener("submit",e=>{e.preventDefault();$("subscribeNote").textContent="Email subscriptions are not enabled yet. Connect an email marketing service to activate this form.";});
+    document.addEventListener("visibilitychange",()=>{if(!document.hidden&&lastLoaded===$("gameDate").value&&Date.now()-new Date(document.lastModified).getTime()>0){/* Use the Refresh button for latest data. */}});
+    load();
+  </script>
+</body>
+</html>
